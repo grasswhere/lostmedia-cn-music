@@ -1,0 +1,30 @@
+<html>
+<audio id="dynamicAudio" controls preload="auto"></audio>
+<script>
+  function getUrlParameter(name) {
+    const regex = new RegExp('[?&]' + name + '=([^&#]*)');
+    const results = regex.exec(window.location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  const url = getUrlParameter('url');
+  const page = getUrlParameter('page') || '%%fullname%%';
+  const audio = document.getElementById('dynamicAudio');
+  const isFullUrl = /^https?:\/\//i.test(url);
+
+  //构建音频
+  if (url) {
+    audio.src = isFullUrl ? url : `https://lostmedia.wdfiles.com/local--files/${page}/${url}`;
+  } else {
+    console.error('未提供音频URL参数');
+    audio.outerHTML = '<div class="audio-error">错误：未提供音频URL</div>';
+  }
+
+  audio.addEventListener('error', () => {
+    console.error('音频加载失败:', audio.error);
+    if (!audio.error) {
+      audio.outerHTML = '<div class="audio-error">错误：无效的音频URL</div>';
+    }
+  });
+</script>
+</html>

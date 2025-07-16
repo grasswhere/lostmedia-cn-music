@@ -1,30 +1,50 @@
-<html>
-<audio id="dynamicAudio" controls preload="auto"></audio>
-<script>
-  function getUrlParameter(name) {
-    const regex = new RegExp('[?&]' + name + '=([^&#]*)');
-    const results = regex.exec(window.location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  }
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频播放器</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+        }
+        .audio-error {
+            color: red;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <audio id="dynamicAudio" controls preload="auto"></audio>
+    <script>
+        function getUrlParameter(name) {
+            const regex = new RegExp('[?&]' + name + '=([^&#]*)');
+            const results = regex.exec(window.location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
 
-  const url = getUrlParameter('url');
-  const page = getUrlParameter('page') || '%%fullname%%';
-  const audio = document.getElementById('dynamicAudio');
-  const isFullUrl = /^https?:\/\//i.test(url);
+        const url = getUrlParameter('url');
+        const page = getUrlParameter('page') || '%%fullname%%';
+        const audio = document.getElementById('dynamicAudio');
+        const isFullUrl = /^https?:\/\//i.test(url);
 
-  //构建音频
-  if (url) {
-    audio.src = isFullUrl ? url : `https://lostmedia.wdfiles.com/local--files/${page}/${url}`;
-  } else {
-    console.error('未提供音频URL参数');
-    audio.outerHTML = '<div class="audio-error">错误：未提供音频URL</div>';
-  }
+        //构建音频
+        if (url) {
+            audio.src = isFullUrl ? url : `https://lostmedia.wdfiles.com/local--files/${page}/${url}`;
+        } else {
+            console.error('未提供音频URL参数');
+            audio.outerHTML = '<div class="audio-error">错误：未提供音频URL</div>';
+        }
 
-  audio.addEventListener('error', () => {
-    console.error('音频加载失败:', audio.error);
-    if (!audio.error) {
-      audio.outerHTML = '<div class="audio-error">错误：无效的音频URL</div>';
-    }
-  });
-</script>
+        audio.addEventListener('error', () => {
+            console.error('音频加载失败:', audio.error);
+            if (!audio.error) {
+                audio.outerHTML = '<div class="audio-error">错误：无效的音频URL</div>';
+            }
+        });
+    </script>
+</body>
 </html>
